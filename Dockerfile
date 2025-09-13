@@ -1,24 +1,15 @@
-# Use PHP 8.1 with Apache
-FROM php:8.1-apache
-
-# Install PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+FROM php:8.2-apache
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Ensure .htaccess overrides are allowed
-RUN echo "<Directory /var/www/html/>" > /etc/apache2/conf-available/lavalust.conf \
-    && echo "    AllowOverride All" >> /etc/apache2/conf-available/lavalust.conf \
-    && echo "</Directory>" >> /etc/apache2/conf-available/lavalust.conf \
-    && a2enconf lavalust
+# Copy project files to Apache root
+COPY . /var/www/html
 
-# Set working dir
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy app files
-COPY . /var/www/html/
+# Point Apache DocumentRoot to /public
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
-
-CMD ["apache2-foreground"]
