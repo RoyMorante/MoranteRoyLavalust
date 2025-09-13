@@ -1,7 +1,7 @@
-﻿services:
+services:
   - type: web
     name: moranteroylavalust
     env: php
     plan: free
     buildCommand: ""
-    startCommand: php -S 0.0.0.0:10000 -t public
+    startCommand: php -S 0.0.0.0:10000 -t public public/index.php
